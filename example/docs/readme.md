@@ -7,6 +7,19 @@ Auto convert markdown to html for koa. Inspired by [connect-markdown](https://gi
 
 ## Usage
 
+```js
+var koa = require('koa');
+var markdown = require('koa-markdown');
+
+var app = koa();
+app.use(markdown({
+  root: __dirname + '/docs',
+  baseUrl: '/docs'
+}));
+
+app.listen(7001);
+```
+
 ## Licences
 (The MIT License)
 
