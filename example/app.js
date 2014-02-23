@@ -15,5 +15,9 @@ app.use(function *() {
   this.body = 'page not found';
 });
 
-app.listen(7001);
-console.log('app listening on 7001, visit http://localhost:7001/docs to visit');
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(7001);
+  console.log('app listening on 7001, visit http://localhost:7001/docs to visit');
+}
+
+module.exports = app.callback();

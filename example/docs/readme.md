@@ -1,4 +1,4 @@
-koa-markdown [![Build Status](https://secure.travis-ci.org/dead-horse/koa-markdown.png)](http://travis-ci.org/dead-horse/koa-markdown)
+koa-markdown
 =========
 
 Auto convert markdown to html for koa. Inspired by [connect-markdown](https://github.com/fengmk2/connect-markdown).

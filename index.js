@@ -1,5 +1,5 @@
 /*!
- * koa-markdown - lib/index.js
+ * koa-markdown - index.js
  * Copyright(c) 2014 dead_horse <dead_horse@qq.com>
  * MIT Licensed
  */
@@ -22,7 +22,7 @@ module.exports = function (options) {
   if (!options || !options.root || !options.baseUrl) {
     throw new Error('options.root and options.baseUrl required');
   }
-  options.baseUrl = options.baseUrl.replace(/\/$/, '') + '/';
+  options.baseUrl = options.baseUrl.replace(/\/$/, '');
   options.layout = options.layout || path.join(options.root, 'layout.html');
   options.cache = options.cache === false ? false : true;
   options.titleHolder = options.titleHolder || '{TITLE}';
@@ -76,21 +76,27 @@ module.exports = function (options) {
   }
 
   return function * markdown(next) {
+    if (this.method !== 'GET') {
+      return yield next;
+    }
     var urlInfo = urlParser(this.url);
     var pathname = urlInfo.pathname;
 
-    if (pathname[pathname.length - 1] !== '/') {
-      pathname += '/';
-    }
-    if (pathname.indexOf(options.baseUrl) !== 0) {
+    // check if match base url
+    var matchPath = pathname.indexOf(options.baseUrl + '/') === 0 ||
+      pathname === options.baseUrl;
+    if (!matchPath) {
       return yield next;
     }
-    pathname = pathname.replace(options.baseUrl, '/');
-    if (pathname === '/') {
+
+    // get md file path
+    pathname = pathname.replace(options.baseUrl, '');
+    if (pathname === '/' || pathname === '') {
       pathname = '/' + options.indexName;
     }
-
     pathname = path.join(options.root, pathname + '.md');
+
+    // generate html
     var html = yield getPage(pathname);
     if (html === null) {
       return yield next;
