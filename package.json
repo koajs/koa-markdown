@@ -1,6 +1,6 @@
 {
   "name": "koa-markdown",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "koa-markdown [![Build Status](https://secure.travis-ci.org/dead-horse/koa-markdown.png)](http://travis-ci.org/dead-horse/koa-markdown) =========",
   "main": "index.js",
   "scripts": {
@@ -35,5 +35,6 @@
   },
   "engine": {
     "node": ">0.11"
-  }
+  },
+  "files": ["index.js"]
 }
