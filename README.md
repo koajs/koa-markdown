@@ -7,6 +7,31 @@ Auto convert markdown to html for koa. Inspired by [connect-markdown](https://gi
 
 ## Usage
 
+```js
+var koa = require('koa');
+var markdown = require('koa-markdown');
+
+var app = koa();
+app.use(markdown({
+  root: __dirname + '/docs',
+  baseUrl: '/docs'
+}));
+
+app.listen(7001);
+```
+
+Or you can checkout the [example](https://github.com/dead-horse/koa-markdown/tree/master/example).
+## Options
+
+* **root**: the markdown file root directory (required)
+* **baseUrl**: base url of koa-markdown (required)
+* **layout**: layout html file, default is `root`/layout.html
+* **titleHolder**: title place holder in layout.html, default is {TITLE}
+* **bodyHolder**: body place holder in layout.html, default is {BODY}
+* **indexName**: request base url will get `indexName`.md, default is 'index'
+* **cache**: cache the html page, default is `true`
+* **markedOpts**: marked options
+
 ## Licences
 (The MIT License)
 
