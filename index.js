@@ -13,7 +13,6 @@
 var marked = require('marked');
 var path = require('path');
 var fs = require('co-fs');
-var urlParser = require('url').parse;
 
 var cachePages = {};
 var cacheLayout;
@@ -79,8 +78,7 @@ module.exports = function (options) {
     if (this.method !== 'GET') {
       return yield next;
     }
-    var urlInfo = urlParser(this.url);
-    var pathname = urlInfo.pathname;
+    var pathname = this.path;
 
     // check if match base url
     var matchPath = pathname.indexOf(options.baseUrl + '/') === 0 ||
