@@ -1,7 +1,7 @@
 {
   "name": "koa-markdown",
   "version": "0.0.2",
-  "description": "koa-markdown [![Build Status](https://secure.travis-ci.org/dead-horse/koa-markdown.png)](http://travis-ci.org/dead-horse/koa-markdown) =========",
+  "description": "Auto convert markdown to html for koa. Inspired by connect-render",
   "main": "index.js",
   "scripts": {
     "test": "make test"
