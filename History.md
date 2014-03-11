@@ -1,4 +1,10 @@
 
+0.0.3 / 2014-03-11
+==================
+
+  * fix charset error in koa 0.5.1
+  * fix package description
+
 0.0.2 / 2014-02-24
 ==================
 
