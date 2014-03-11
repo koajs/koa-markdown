@@ -99,8 +99,7 @@ module.exports = function (options) {
     if (html === null) {
       return yield next;
     }
-    this.type = 'text/html';
-    this.charset = 'utf-8';
+    this.type = 'html';
     this.body = html;
   };
 };
