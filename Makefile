@@ -19,7 +19,8 @@ contributors: install
 	@./node_modules/contributors/bin/contributors -f plain -o AUTHORS
 
 autod: install
-	@./node_modules/.bin/autod -w -e example
+	@./node_modules/.bin/autod -w --prefix="~" \
+	-D mocha,should
 	@$(MAKE) install
 
 .PHONY: test

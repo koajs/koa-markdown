@@ -19,13 +19,10 @@ describe('test/koa-markdown.test.js', function () {
   it('should error with out options', function () {
     (function() {
       markdown();
-    }).should.throw('options.root and options.baseUrl required');
+    }).should.throw('options.root required');
     (function() {
       markdown({baseUrl: '/docs'});
-    }).should.throw('options.root and options.baseUrl required');
-    (function() {
-      markdown({root: '/docs'});
-    }).should.throw('options.root and options.baseUrl required');
+    }).should.throw('options.root required');
   });
 
   it('should request path not match 404', function (done) {
