@@ -1,7 +1,10 @@
-koa-markdown [![Build Status](https://secure.travis-ci.org/dead-horse/koa-markdown.png)](http://travis-ci.org/dead-horse/koa-markdown)
-=========
+koa-markdown
+============
+
+[![Build Status](https://secure.travis-ci.org/koajs/koa-markdown.png)](http://travis-ci.org/koajs/koa-markdown)
 
 Auto convert markdown to html for koa. Inspired by [connect-markdown](https://github.com/fengmk2/connect-markdown).
+Powered by [remarkable](https://github.com/jonschlinkert/remarkable).
 
 [![NPM](https://nodei.co/npm/koa-markdown.png?downloads=true)](https://nodei.co/npm/koa-markdown/)
 
@@ -30,12 +33,12 @@ Or you can checkout the [example](https://github.com/dead-horse/koa-markdown/tre
 * **bodyHolder**: body place holder in layout.html, default is {BODY}
 * **indexName**: request base url will get `indexName`.md, default is 'index'
 * **cache**: cache the html page, default is `true`
-* **markedOpts**: marked options
+* **remarkableOptions**: remarkable options
 
 ## Licences
 (The MIT License)
 
-Copyright (c) 2013 dead-horse and other contributors
+Copyright (c) 2013-2014 dead-horse and other contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the 'Software'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

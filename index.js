@@ -10,7 +10,7 @@
  * Module dependencies.
  */
 
-var marked = require('marked');
+var Remarkable = require('remarkable');
 var assert = require('assert');
 var copy = require('copy-to');
 var path = require('path');
@@ -32,8 +32,9 @@ module.exports = function (options) {
   copy(defaultOpts).to(options);
   options.baseUrl = options.baseUrl.replace(/\/$/, '') + '/';
   options.layout = options.layout || path.join(options.root, 'layout.html');
-  if (options.markedOpts) {
-    marked.setOptions(options.markedOpts);
+  var md = new Remarkable();
+  if (options.remarkableOptions) {
+    md.set(options.remarkableOptions);
   }
 
   return function* markdown(next) {
@@ -98,7 +99,7 @@ module.exports = function (options) {
   function *getContent(filepath) {
     var content = yield fs.readFile(filepath, 'utf8');
     var title = content.slice(0, content.indexOf('\n')).trim().replace(/^[#\s]+/, '');
-    var body = marked(content);
+    var body = md.render(content);
     return {
       title: title,
       body: body
