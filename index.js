@@ -32,9 +32,15 @@ module.exports = function (options) {
   copy(defaultOpts).to(options);
   options.baseUrl = options.baseUrl.replace(/\/$/, '') + '/';
   options.layout = options.layout || path.join(options.root, 'layout.html');
-  var md = new Remarkable();
-  if (options.remarkableOptions) {
-    md.set(options.remarkableOptions);
+  // support custom markdown render
+  if (typeof options.render !== 'function') {
+    var md = new Remarkable();
+    if (options.remarkableOptions) {
+      md.set(options.remarkableOptions);
+    }
+    options.render = function (content) {
+      return md.render(content);
+    };
   }
 
   return function* markdown(next) {
@@ -99,7 +105,7 @@ module.exports = function (options) {
   function *getContent(filepath) {
     var content = yield fs.readFile(filepath, 'utf8');
     var title = content.slice(0, content.indexOf('\n')).trim().replace(/^[#\s]+/, '');
-    var body = md.render(content);
+    var body = options.render(content);
     return {
       title: title,
       body: body
