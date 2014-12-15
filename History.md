@@ -1,4 +1,10 @@
 
+1.1.0 / 2014-12-15
+==================
+
+  * Merge pull request #1 from koajs/options.render
+  * feat: support custom markdown render
+
 1.0.0 / 2014-11-02
 ==================
 
