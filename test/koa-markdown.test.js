@@ -11,6 +11,8 @@
  */
 
 var should = require('should');
+var path = require('path');
+var koa = require('koa');
 var app = require('../example/app');
 var request = require('supertest');
 var markdown = require('..');
@@ -70,5 +72,33 @@ describe('test/koa-markdown.test.js', function () {
     request(app)
     .get('/docs/index/')
     .expect(404, done);
+  });
+
+  describe('custom options.render', function () {
+    it('should work', function (done) {
+      var app = koa();
+      var docs = path.join(__dirname, '..', 'example', 'docs');
+      app.use(markdown({
+        baseUrl: '/docs',
+        root: docs,
+        cache: true,
+        render: function (content) {
+          return 'hack content, length ' + content.length;
+        }
+      }));
+
+      request(app.listen())
+      .get('/docs')
+      .expect(200)
+      .expect(/hack content, length 352/, function (err) {
+        should.not.exist(err);
+
+        // should get from cache
+        request(app.listen())
+        .get('/docs')
+        .expect(200)
+        .expect(/hack content, length 352/, done);
+      });
+    });
   });
 });
