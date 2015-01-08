@@ -55,6 +55,10 @@ module.exports = function (options) {
       || pathname === options.baseUrl) {
       pathname = options.baseUrl + options.indexName;
     }
+    // folder index file
+    if (pathname.lastIndexOf('/') === (pathname.length - 1) ) {
+      pathname = pathname + options.indexName;
+    };
 
     // check if match base url
     if (pathname.indexOf(options.baseUrl) !== 0) return yield* next;
