@@ -10,7 +10,6 @@
  * Module dependencies.
  */
 
-var Remarkable = require('remarkable');
 var assert = require('assert');
 var copy = require('copy-to');
 var path = require('path');
@@ -34,10 +33,12 @@ module.exports = function (options) {
   options.layout = options.layout || path.join(options.root, 'layout.html');
   // support custom markdown render
   if (typeof options.render !== 'function') {
-    var md = new Remarkable();
     if (options.remarkableOptions) {
-      md.set(options.remarkableOptions);
+      throw new Error('koa-markdown is using markdown-it as default for markdown render, ' +
+        'please pass `options.mdOptions` instead');
     }
+
+    var md = require('markdown-it')(options.mdOptions);
     options.render = function (content) {
       return md.render(content);
     };
