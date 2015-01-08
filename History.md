@@ -1,4 +1,11 @@
 
+n.n.n / 2015-01-08
+==================
+
+  * feat: use markdown-it replace with remarkable
+  * Merge pull request #3 from noyobo/master
+  * support request folder
+
 1.1.0 / 2014-12-15
 ==================
 
