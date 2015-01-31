@@ -1,5 +1,10 @@
 
-n.n.n / 2015-01-08
+2.0.1 / 2015-01-31
+==================
+
+  * fix: replace will have problem when content string contains '$&'
+
+2.0.0 / 2015-01-08
 ==================
 
   * feat: use markdown-it replace with remarkable
