@@ -14,6 +14,7 @@ var assert = require('assert');
 var copy = require('copy-to');
 var path = require('path');
 var fs = require('co-fs');
+var utility = require('utility');
 
 var cachePages = {};
 var cacheLayout;
@@ -91,8 +92,8 @@ module.exports = function (options) {
 
     var layout = r[0];
     var content = r[1];
-    var html = layout.replace(options.titleHolder, content.title)
-      .replace(options.bodyHolder, content.body);
+    var html = utility.replace(layout, options.titleHolder, content.title);
+    html = utility.replace(html, options.bodyHolder, content.body);
 
     if (options.cache) {
       cachePages[filepath] = html;

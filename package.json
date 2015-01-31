@@ -39,7 +39,8 @@
   "dependencies": {
     "co-fs": "~1.2.0",
     "copy-to": "~2.0.1",
-    "markdown-it": "~3.0.1"
+    "markdown-it": "~3.0.1",
+    "utility": "~1.3.0"
   },
   "engine": {
     "node": ">= 0.11.12"

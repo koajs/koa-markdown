@@ -27,6 +27,13 @@ describe('test/koa-markdown.test.js', function () {
     }).should.throw('options.root required');
   });
 
+  it('should render with $& content', function (done) {
+    request(app)
+    .get('/docs/replace')
+    .expect(/\$&amp;test/)
+    .expect(200, done);
+  });
+
   it('should request path not match 404', function (done) {
     request(app)
     .get('/docsabc')
