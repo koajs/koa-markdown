@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/koajs/koa-markdown",
   "devDependencies": {
-    "autod": "1",
+    "autod": "2.4.2",
     "contributors": "~0.2.3",
     "istanbul-harmony": "~0.3.1",
     "koa": "~0.14.0",
