@@ -32,7 +32,7 @@
     "contributors": "~0.2.3",
     "istanbul-harmony": "~0.3.1",
     "koa": "~0.14.0",
-    "mocha": "~2.0.1",
+    "mocha": "~2.4.1",
     "should": "~4.4.2",
     "supertest": "~0.15.0"
   },
