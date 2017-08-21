@@ -1,14 +1,4 @@
-/*!
- * koa-markdown - index.js
- * Copyright(c) 2014 dead_horse <dead_horse@qq.com>
- * MIT Licensed
- */
-
-"use strict";
-
-/**
- * Module dependencies.
- */
+'use strict';
 
 var assert = require('assert');
 var copy = require('copy-to');
@@ -47,7 +37,7 @@ module.exports = function (options) {
 
   return function* markdown(next) {
     if (this.method !== 'GET') {
-      return yield* next;
+      return yield next;
     }
     var pathname = this.path;
     // get md file path
@@ -63,20 +53,20 @@ module.exports = function (options) {
     };
 
     // check if match base url
-    if (pathname.indexOf(options.baseUrl) !== 0) return yield* next;
+    if (pathname.indexOf(options.baseUrl) !== 0) return yield next;
     pathname = pathname.replace(options.baseUrl, '');
     pathname = path.join(options.root, pathname + '.md');
 
     // generate html
-    var html = yield* getPage(pathname);
+    var html = yield getPage(pathname);
     if (html === null) {
-      return yield* next;
+      return yield next;
     }
     this.type = 'html';
     this.body = html;
   };
 
-  function *getPage(filepath) {
+  function* getPage(filepath) {
     if (options.cache && filepath in cachePages) {
       return cachePages[filepath];
     }
@@ -101,14 +91,14 @@ module.exports = function (options) {
     return html;
   }
 
-  function *getLayout() {
+  function* getLayout() {
     if (options.cache && cacheLayout) return cacheLayout;
     var layout = yield fs.readFile(options.layout, 'utf8');
     if (options.cache) cacheLayout = layout;
     return layout;
   }
 
-  function *getContent(filepath) {
+  function* getContent(filepath) {
     var content = yield fs.readFile(filepath, 'utf8');
     var title = content.slice(0, content.indexOf('\n')).trim().replace(/^[#\s]+/, '');
     var body = options.render(content);
