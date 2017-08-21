@@ -1,4 +1,11 @@
 
+2.0.2 / 2017-08-21
+==================
+
+**others**
+  * [[`a3ed792`](http://github.com/koajs/koa-markdown/commit/a3ed792b2dccbe226b607b3666dd8168ef522875)] - refactor: use yield instead of yield* (#15) (fengmk2 <<fengmk2@gmail.com>>)
+  * [[`af7cc8d`](http://github.com/koajs/koa-markdown/commit/af7cc8da1233d0b48c8c7b2a20193d2f8942223a)] - chore(package): update autod to version 2.4.2 (greenkeeperio-bot <<support@greenkeeper.io>>)
+
 2.0.1 / 2015-01-31
 ==================
 
