@@ -35,7 +35,7 @@ Or you can checkout the [example](https://github.com/koajs/koa-markdown/tree/mas
 * **indexName**: request base url will get `indexName`.md, default is 'index'
 * **cache**: cache the html page, default is `false`
 * **render**: custom render function, default is `markdown-it.render`
-* **mdOptions**: markdown-it options, by defualt, `koa-markdown` is using `markdown-it` as it's render.
+* **mdOptions**: markdown-it options, by default, `koa-markdown` is using `markdown-it` as it's render.
 
 ## Licences
 
