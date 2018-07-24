@@ -2,7 +2,7 @@
 
 var assert = require('assert');
 var path = require('path');
-var fs = require('co-fs');
+var fs = require('fs');
 
 var cachePages = {};
 var cacheLayout;
@@ -33,11 +33,11 @@ module.exports = function (options) {
     };
   }
 
-  return function* markdown(next) {
-    if (this.method !== 'GET') {
-      return yield next;
+  return async function markdown(ctx, next) {
+    if (ctx.request.method !== 'GET') {
+      return await next();
     }
-    var pathname = this.path;
+    var pathname = ctx.request.path;
     // get md file path
 
     // index file
@@ -51,26 +51,28 @@ module.exports = function (options) {
     };
 
     // check if match base url
-    if (pathname.indexOf(options.baseUrl) !== 0) return yield next;
+    if (pathname.indexOf(options.baseUrl) !== 0) {
+      return await next();
+    }
     pathname = pathname.replace(options.baseUrl, '');
     pathname = path.join(options.root, pathname + '.md');
 
     // generate html
-    var html = yield getPage(pathname);
+    var html = await getPage(pathname);
     if (html === null) {
-      return yield next;
+      return await next();
     }
-    this.type = 'html';
-    this.body = html;
+    ctx.type = 'html';
+    ctx.body = html;
   };
 
-  function* getPage(filepath) {
+  async function getPage(filepath) {
     if (options.cache && filepath in cachePages) {
       return cachePages[filepath];
     }
     var r;
     try {
-      r = yield [getLayout(), getContent(filepath)];
+      r = [ await getLayout(), await getContent(filepath)];
     } catch (err) {
       if (err.code === 'ENOENT') {
         return null;
@@ -102,15 +104,15 @@ module.exports = function (options) {
     return htmlWithContent;
   }
 
-  function* getLayout() {
+  async function getLayout() {
     if (options.cache && cacheLayout) return cacheLayout;
-    var layout = yield fs.readFile(options.layout, 'utf8');
+    var layout = fs.readFileSync(options.layout, 'utf8');
     if (options.cache) cacheLayout = layout;
     return layout;
   }
 
-  function* getContent(filepath) {
-    var content = yield fs.readFile(filepath, 'utf8');
+  async function getContent(filepath) {
+    var content = fs.readFileSync(filepath, 'utf-8');
     var title = content.slice(0, content.indexOf('\n')).trim().replace(/^[#\s]+/, '');
     var body = options.render(content);
     return {

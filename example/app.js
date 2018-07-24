@@ -10,9 +10,9 @@ app.use(markdown({
   indexName: 'readme'
 }));
 
-app.use(function *() {
-  this.status = 404;
-  this.body = 'page not found';
+app.use(function ( ctx, next ) {
+  ctx.status = 404;
+  ctx.body = 'page not found';
 });
 
 if (process.env.NODE_ENV !== 'test') {
