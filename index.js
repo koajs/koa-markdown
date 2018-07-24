@@ -3,7 +3,6 @@
 var assert = require('assert');
 var path = require('path');
 var fs = require('co-fs');
-var utility = require('utility');
 
 var cachePages = {};
 var cacheLayout;
@@ -81,13 +80,26 @@ module.exports = function (options) {
 
     var layout = r[0];
     var content = r[1];
-    var html = utility.replace(layout, options.titleHolder, content.title);
-    html = utility.replace(html, options.bodyHolder, content.body);
+
+    /**
+     * Using .replace() will break down with a few specific strings.
+     * Example: $& which will insert "the matched substring."
+     * Since "{TITLE}" is the matched substring, our test case "$&test" returns "{TITLE}test"
+     * Replacing $ with $$ prevents this.
+     * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#Specifying_a_string_as_a_parameter
+     */
+
+    // Mutating title and body
+    content.title = content.title.replace( /\${1}/g, '$$$' );
+    content.body = content.body.replace( /\${1}/g, '$$$' );
+
+    var htmlWithTitle = layout.replace( options.titleHolder, content.title );
+    var htmlWithContent = htmlWithTitle.replace( options.bodyHolder, content.body );
 
     if (options.cache) {
-      cachePages[filepath] = html;
+      cachePages[filepath] = htmlWithContent;
     }
-    return html;
+    return htmlWithContent;
   }
 
   function* getLayout() {
