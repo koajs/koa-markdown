@@ -34,7 +34,6 @@
     "supertest": "^3.1.0"
   },
   "dependencies": {
-    "co-fs": "^1.2.0",
     "markdown-it": "^3.0.1"
   },
   "engine": {
