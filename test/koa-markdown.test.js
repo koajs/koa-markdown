@@ -12,7 +12,7 @@
 
 var should = require('should');
 var path = require('path');
-var koa = require('koa');
+var Koa = require('koa');
 var app = require('../example/app');
 var request = require('supertest');
 var markdown = require('..');
@@ -108,7 +108,7 @@ describe('test/koa-markdown.test.js', function () {
 
   describe('custom options.render', function () {
     it('should work', function (done) {
-      var app = koa();
+      var app = new Koa();
       var docs = path.join(__dirname, '..', 'example', 'docs');
       app.use(markdown({
         baseUrl: '/docs',

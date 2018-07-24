@@ -1,6 +1,6 @@
-var koa = require('koa');
+var Koa = require('koa');
 var markdown = require('..');
-var app = koa();
+var app = new Koa();
 
 app.use(markdown({
   baseUrl: '/docs',
