@@ -1,7 +1,6 @@
 'use strict';
 
 var assert = require('assert');
-var copy = require('copy-to');
 var path = require('path');
 var fs = require('co-fs');
 var utility = require('utility');
@@ -19,7 +18,7 @@ var defaultOpts = {
 
 module.exports = function (options) {
   assert(options && options.root, 'options.root required');
-  copy(defaultOpts).to(options);
+  options = Object.assign( {}, defaultOpts, options )
   options.baseUrl = options.baseUrl.replace(/\/$/, '') + '/';
   options.layout = options.layout || path.join(options.root, 'layout.html');
   // support custom markdown render
