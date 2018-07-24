@@ -58,7 +58,7 @@ module.exports = function (options) {
     pathname = path.join(options.root, pathname + '.md');
 
     // generate html
-    var html = await getPage(pathname);
+    var html = getPage(pathname);
     if (html === null) {
       return await next();
     }
@@ -66,13 +66,13 @@ module.exports = function (options) {
     ctx.body = html;
   };
 
-  async function getPage(filepath) {
+  function getPage(filepath) {
     if (options.cache && filepath in cachePages) {
       return cachePages[filepath];
     }
     var r;
     try {
-      r = [ await getLayout(), await getContent(filepath)];
+      r = [getLayout(), getContent(filepath)];
     } catch (err) {
       if (err.code === 'ENOENT') {
         return null;
@@ -104,14 +104,14 @@ module.exports = function (options) {
     return htmlWithContent;
   }
 
-  async function getLayout() {
+  function getLayout() {
     if (options.cache && cacheLayout) return cacheLayout;
     var layout = fs.readFileSync(options.layout, 'utf8');
     if (options.cache) cacheLayout = layout;
     return layout;
   }
 
-  async function getContent(filepath) {
+  function getContent(filepath) {
     var content = fs.readFileSync(filepath, 'utf-8');
     var title = content.slice(0, content.indexOf('\n')).trim().replace(/^[#\s]+/, '');
     var body = options.render(content);
