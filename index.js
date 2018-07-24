@@ -1,10 +1,8 @@
 'use strict';
 
 var assert = require('assert');
-var copy = require('copy-to');
 var path = require('path');
-var fs = require('co-fs');
-var utility = require('utility');
+var fs = require('fs');
 
 var cachePages = {};
 var cacheLayout;
@@ -19,7 +17,7 @@ var defaultOpts = {
 
 module.exports = function (options) {
   assert(options && options.root, 'options.root required');
-  copy(defaultOpts).to(options);
+  options = Object.assign( {}, defaultOpts, options )
   options.baseUrl = options.baseUrl.replace(/\/$/, '') + '/';
   options.layout = options.layout || path.join(options.root, 'layout.html');
   // support custom markdown render
@@ -35,11 +33,11 @@ module.exports = function (options) {
     };
   }
 
-  return function* markdown(next) {
-    if (this.method !== 'GET') {
-      return yield next;
+  return async function markdown(ctx, next) {
+    if (ctx.request.method !== 'GET') {
+      return await next();
     }
-    var pathname = this.path;
+    var pathname = ctx.request.path;
     // get md file path
 
     // index file
@@ -53,26 +51,28 @@ module.exports = function (options) {
     };
 
     // check if match base url
-    if (pathname.indexOf(options.baseUrl) !== 0) return yield next;
+    if (pathname.indexOf(options.baseUrl) !== 0) {
+      return await next();
+    }
     pathname = pathname.replace(options.baseUrl, '');
     pathname = path.join(options.root, pathname + '.md');
 
     // generate html
-    var html = yield getPage(pathname);
+    var html = getPage(pathname);
     if (html === null) {
-      return yield next;
+      return await next();
     }
-    this.type = 'html';
-    this.body = html;
+    ctx.type = 'html';
+    ctx.body = html;
   };
 
-  function* getPage(filepath) {
+  function getPage(filepath) {
     if (options.cache && filepath in cachePages) {
       return cachePages[filepath];
     }
     var r;
     try {
-      r = yield [getLayout(), getContent(filepath)];
+      r = [getLayout(), getContent(filepath)];
     } catch (err) {
       if (err.code === 'ENOENT') {
         return null;
@@ -82,24 +82,37 @@ module.exports = function (options) {
 
     var layout = r[0];
     var content = r[1];
-    var html = utility.replace(layout, options.titleHolder, content.title);
-    html = utility.replace(html, options.bodyHolder, content.body);
+
+    /**
+     * Using .replace() will break down with a few specific strings.
+     * Example: $& which will insert "the matched substring."
+     * Since "{TITLE}" is the matched substring, our test case "$&test" returns "{TITLE}test"
+     * Replacing $ with $$ prevents this.
+     * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace#Specifying_a_string_as_a_parameter
+     */
+
+    // Mutating title and body
+    content.title = content.title.replace( /\${1}/g, '$$$' );
+    content.body = content.body.replace( /\${1}/g, '$$$' );
+
+    var htmlWithTitle = layout.replace( options.titleHolder, content.title );
+    var htmlWithContent = htmlWithTitle.replace( options.bodyHolder, content.body );
 
     if (options.cache) {
-      cachePages[filepath] = html;
+      cachePages[filepath] = htmlWithContent;
     }
-    return html;
+    return htmlWithContent;
   }
 
-  function* getLayout() {
+  function getLayout() {
     if (options.cache && cacheLayout) return cacheLayout;
-    var layout = yield fs.readFile(options.layout, 'utf8');
+    var layout = fs.readFileSync(options.layout, 'utf8');
     if (options.cache) cacheLayout = layout;
     return layout;
   }
 
-  function* getContent(filepath) {
-    var content = yield fs.readFile(filepath, 'utf8');
+  function getContent(filepath) {
+    var content = fs.readFileSync(filepath, 'utf-8');
     var title = content.slice(0, content.indexOf('\n')).trim().replace(/^[#\s]+/, '');
     var body = options.render(content);
     return {

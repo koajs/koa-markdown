@@ -12,7 +12,7 @@
 
 var should = require('should');
 var path = require('path');
-var koa = require('koa');
+var Koa = require('koa');
 var app = require('../example/app');
 var request = require('supertest');
 var markdown = require('..');
@@ -32,6 +32,24 @@ describe('test/koa-markdown.test.js', function () {
     .get('/docs/replace')
     .expect(/\$&amp;test/)
     .expect(200, done);
+  });
+
+  it( 'should render $ alone', function ( done ) {
+
+    request( app )
+      .get( '/docs/replace-alone' )
+      .expect( /\${1}/g )
+      .expect( res => {
+
+        const testRegEx = /\${2}/g;
+
+        if ( true === testRegEx.test( res.text ) ) {
+          throw new Error( 'Found double dollar signs $$' )
+        }
+
+      })
+      .expect( 200, done );
+
   });
 
   it('should request path not match 404', function (done) {
@@ -90,7 +108,7 @@ describe('test/koa-markdown.test.js', function () {
 
   describe('custom options.render', function () {
     it('should work', function (done) {
-      var app = koa();
+      var app = new Koa();
       var docs = path.join(__dirname, '..', 'example', 'docs');
       app.use(markdown({
         baseUrl: '/docs',
