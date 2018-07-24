@@ -34,6 +34,24 @@ describe('test/koa-markdown.test.js', function () {
     .expect(200, done);
   });
 
+  it( 'should render $ alone', function ( done ) {
+
+    request( app )
+      .get( '/docs/replace-alone' )
+      .expect( /\${1}/g )
+      .expect( res => {
+
+        const testRegEx = /\${2}/g;
+
+        if ( true === testRegEx.test( res.text ) ) {
+          throw new Error( 'Found double dollar signs $$' )
+        }
+
+      })
+      .expect( 200, done );
+
+  });
+
   it('should request path not match 404', function (done) {
     request(app)
     .get('/docsabc')
