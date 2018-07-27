@@ -34,7 +34,8 @@
     "supertest": "^3.1.0"
   },
   "dependencies": {
-    "markdown-it": "^8.x"
+    "markdown-it": "^8.x",
+    "mz": "^2.7.0"
   },
   "engine": {
     "node": ">= 8.0.0"

@@ -2,7 +2,7 @@
 
 var assert = require('assert');
 var path = require('path');
-var fs = require('fs');
+var fs = require('mz/fs')
 
 var cachePages = {};
 var cacheLayout;
@@ -17,7 +17,7 @@ var defaultOpts = {
 
 module.exports = function (options) {
   assert(options && options.root, 'options.root required');
-  options = Object.assign( {}, defaultOpts, options )
+  options = Object.assign( {}, defaultOpts, options );
   options.baseUrl = options.baseUrl.replace(/\/$/, '') + '/';
   options.layout = options.layout || path.join(options.root, 'layout.html');
   // support custom markdown render
@@ -58,7 +58,7 @@ module.exports = function (options) {
     pathname = path.join(options.root, pathname + '.md');
 
     // generate html
-    var html = getPage(pathname);
+    var html = await getPage(pathname);
     if (html === null) {
       return await next();
     }
@@ -66,13 +66,13 @@ module.exports = function (options) {
     ctx.body = html;
   };
 
-  function getPage(filepath) {
+  async function getPage(filepath) {
     if (options.cache && filepath in cachePages) {
       return cachePages[filepath];
     }
     var r;
     try {
-      r = [getLayout(), getContent(filepath)];
+      r = [ await getLayout(), await getContent(filepath)];
     } catch (err) {
       if (err.code === 'ENOENT') {
         return null;
@@ -104,15 +104,39 @@ module.exports = function (options) {
     return htmlWithContent;
   }
 
-  function getLayout() {
+  async function getLayout() {
     if (options.cache && cacheLayout) return cacheLayout;
-    var layout = fs.readFileSync(options.layout, 'utf8');
+
+    let layout;
+
+    try {
+
+      layout = await fs.readFile( options.layout, 'utf-8' );
+
+    } catch( err ) {
+
+      throw err;
+
+    }
+
     if (options.cache) cacheLayout = layout;
     return layout;
   }
 
-  function getContent(filepath) {
-    var content = fs.readFileSync(filepath, 'utf-8');
+  async function getContent(filepath) {
+
+    let content;
+
+    try{
+
+      content = await fs.readFile( filepath, 'utf-8' );
+
+    } catch( err ) {
+
+      throw err;
+
+    }
+
     var title = content.slice(0, content.indexOf('\n')).trim().replace(/^[#\s]+/, '');
     var body = options.render(content);
     return {
